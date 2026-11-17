@@ -64,6 +64,7 @@ header .sub{color:var(--muted);font-size:16px;max-width:64ch;margin-top:10px}
 .pill{font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;white-space:nowrap}
 .pill.good{background:var(--good-soft);color:var(--good)}
 .pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.new{background:var(--accent);color:var(--accent-fg)}
 .pill.info{background:var(--gold-soft);color:var(--gold)}
 .contact{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;user-select:all}
 @media (max-width:620px){
@@ -103,8 +104,8 @@ footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-si
 <header>
   <div class="eyebrow">Elementary teaching, Cheyenne, Wyoming</div>
   <h1>Cheyenne Teaching Jobs</h1>
-  <p class="sub">Every certified elementary opening in Laramie County, pulled live from the district hiring systems. Check the box when you have applied. Checkmarks save on this device.</p>
-  <span class="stamp">Checked Monday, November 17, 2026</span>
+  <p class="sub">Every certified elementary opening in Laramie County, refreshed from the district hiring boards every morning. Check the box when you have applied. Checkmarks save on this device.</p>
+  <span class="stamp" id="stamp">Page built November 17, 2026</span>
 </header>
 
 <div class="bar">
@@ -112,19 +113,12 @@ footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-si
   <div class="hint">Blue button opens the posting. Apply there, then come back and tick the box.</div>
 </div>
 
+<h3>Open elementary classroom jobs <span class="muted" id="feed-stamp" style="font-weight:500;text-transform:none;letter-spacing:0"></span></h3>
+<p class="muted">Pulled from the Laramie County District 1 and District 2 hiring boards every morning. General-ed K-6 classroom contracts only; no paras, subs, coaches, special ed or language immersion.</p>
+<ul class="list" id="jobs-auto"><li class="row" id="feed-empty"><div class="main"><div class="title">Checking the boards</div><div class="school">If this does not change in a few seconds, open the LCSD1 board directly.</div></div><div class="go"><a class="btn" href="https://laramie1.schoolspring.com/">LCSD1 board</a></div></li></ul>
+
 <h3>Apply this week</h3>
 <ul class="list" id="jobs-main">
-
-<li class="row" data-id="poder4">
-  <input type="checkbox" id="chk-poder4" aria-label="Applied: PODER 4th Grade Teacher">
-  <div class="main">
-    <div class="title">4th Grade Teacher</div>
-    <div class="school">PODER Academy Elementary (public charter inside LCSD1), Cheyenne</div>
-    <div class="tags"><span class="pill good">Best fit, general ed</span><span>Posted Oct 15, 2026</span><span>Open until filled</span></div>
-    <div class="note">The only general-ed K-6 classroom opening in the county right now. Needs a Wyoming K-6 endorsement (or in process). Longer day: 7:40 to 4:00, until 5:00 Mon and Tue. Benefits for dependents, Wyoming Retirement System match, WY-TOPP bonuses. Salary not posted; ask.</div>
-  </div>
-  <div class="go"><a class="btn" href="https://laramie1.schoolspring.com/?jobid=5961575">Apply on SchoolSpring</a></div>
-</li>
 
 <li class="row" data-id="stmarys">
   <input type="checkbox" id="chk-stmarys" aria-label="Applied: St. Mary's Elementary Teacher">
@@ -234,22 +228,48 @@ footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-si
   var KEY="cheyenne-jobs-applied-v2", state={};
   try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){state={}}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
-  var jobRows=[].slice.call(document.querySelectorAll(".list .row"));
-  var licRows=[].slice.call(document.querySelectorAll("#license li"));
   var nDone=document.getElementById("n-done"), nTotal=document.getElementById("n-total");
   function count(){
-    var d=jobRows.filter(function(r){return r.classList.contains("done")}).length;
-    nDone.textContent=d; nTotal.textContent=jobRows.length;
+    var rows=[].slice.call(document.querySelectorAll(".list .row[data-id]"));
+    nDone.textContent=rows.filter(function(r){return r.classList.contains("done")}).length;
+    nTotal.textContent=rows.length;
   }
-  jobRows.concat(licRows).forEach(function(row){
+  function wire(row){
     var id=row.getAttribute("data-id"), box=row.querySelector("input[type=checkbox]");
-    if(!box) return;
+    if(!box||box.dataset.wired) return; box.dataset.wired="1";
     if(state[id]){box.checked=true;row.classList.add("done")}
-    box.addEventListener("change",function(){
-      row.classList.toggle("done",box.checked); state[id]=box.checked; save(); count();
-    });
-  });
+    box.addEventListener("change",function(){row.classList.toggle("done",box.checked);state[id]=box.checked;save();count()});
+  }
+  [].slice.call(document.querySelectorAll(".list .row[data-id], #license li[data-id]")).forEach(wire);
   count();
+
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function fmt(d){var p=d.split("-");return new Date(p[0],p[1]-1,p[2]).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+  function render(data){
+    var ul=document.getElementById("jobs-auto"), now=Date.now();
+    ul.innerHTML="";
+    if(!data.jobs.length){
+      ul.innerHTML='<li class="row"><div class="main"><div class="title">No general-ed elementary openings posted today</div><div class="school">The boards are checked every morning. The big wave for 2027-28 usually posts February through April.</div></div><div class="go"><a class="btn" href="https://laramie1.schoolspring.com/">LCSD1 board</a></div></li>';
+    }
+    data.jobs.forEach(function(j){
+      var age=(now-new Date(j.posted).getTime())/864e5, li=document.createElement("li");
+      li.className="row"; li.setAttribute("data-id","job-"+j.id);
+      li.innerHTML='<input type="checkbox" id="chk-job-'+j.id+'" aria-label="Applied: '+esc(j.title)+'">'
+        +'<div class="main"><div class="title">'+esc(j.title)+'</div><div class="school">'+esc(j.school)+' &middot; '+esc(j.district)+'</div>'
+        +'<div class="tags">'+(age<=7?'<span class="pill new">New</span>':'')+'<span>Posted '+fmt(j.posted)+'</span><span>Open until filled</span></div></div>'
+        +'<div class="go"><a class="btn" href="'+esc(j.url)+'">Apply on SchoolSpring</a></div>';
+      ul.appendChild(li); wire(li);
+    });
+    var u=new Date(data.updated);
+    document.getElementById("feed-stamp").textContent=" (boards checked "+u.toLocaleDateString("en-US",{month:"short",day:"numeric"})+")";
+    document.getElementById("stamp").textContent="Boards last checked "+u.toLocaleString("en-US",{weekday:"long",month:"long",day:"numeric",hour:"numeric",minute:"2-digit"});
+    count();
+  }
+  var live="https://raw.githubusercontent.com/bigdawgelitediesel/JOBSEARCH/main/jobs.json?t="+Math.floor(now()/36e5);
+  function now(){return Date.now()}
+  fetch(live,{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(render)
+    .catch(function(){return fetch("jobs.json").then(function(r){return r.json()}).then(render)})
+    .catch(function(){var e=document.getElementById("feed-empty");if(e){e.querySelector(".title").textContent="Could not reach the job feed";}});
 })();
 </script>
 
