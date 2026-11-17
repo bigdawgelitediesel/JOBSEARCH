@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Cheyenne Teaching Jobs</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+html{color-scheme:light}
+body{margin:0}
+img{max-width:100%}
+/* Layout: one column. The page IS the checklist: one row per job with a checkbox, the school, and the apply link. License steps and the plan sit below as reference. */
+:root{
+  --bg:#f7f5f0; --paper:#ffffff; --fg:#1d2430; --muted:#5b6473; --line:#d9d4c8;
+  --accent:#1f3a5f; --accent-fg:#ffffff; --gold:#b8861b; --gold-soft:#fbf2dc;
+  --good:#2f6b3a; --good-soft:#e4f1e5; --warn:#8a4b12; --warn-soft:#fbe9d6;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14181f; --paper:#1c222b; --fg:#e8e6e0; --muted:#a3a9b4; --line:#333b47;
+  --accent:#8fb4e3; --accent-fg:#0f1620; --gold:#e0b35a; --gold-soft:#2c2614;
+  --good:#8fd19a; --good-soft:#1b2c1e; --warn:#f0b57a; --warn-soft:#332314; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14181f; --paper:#1c222b; --fg:#e8e6e0; --muted:#a3a9b4; --line:#333b47;
+  --accent:#8fb4e3; --accent-fg:#0f1620; --gold:#e0b35a; --gold-soft:#2c2614;
+  --good:#8fd19a; --good-soft:#1b2c1e; --warn:#f0b57a; --warn-soft:#332314; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:900px;margin:0 auto}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(32px,6vw,48px);font-weight:700}
+h2{font-size:24px;font-weight:600;margin-top:44px;padding-bottom:10px;border-bottom:2px solid var(--line)}
+h3{font-size:14px;font-weight:600;font-family:var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:26px 0 8px}
+p{margin:0 0 12px;max-width:70ch}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+header{padding-block:36px 4px}
+header .sub{color:var(--muted);font-size:16px;max-width:64ch;margin-top:10px}
+.stamp{display:inline-block;margin-top:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--muted);background:var(--paper)}
+
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;margin-top:22px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.bar .count{font-family:var(--display);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.bar .count small{font-family:var(--body);font-size:14px;font-weight:500;color:var(--muted);margin-left:6px}
+.bar .hint{font-size:13px;color:var(--muted)}
+
+.list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--paper);overflow:hidden}
+.row{display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);min-width:0}
+.row:last-child{border-bottom:0}
+.row input{width:22px;height:22px;accent-color:var(--accent);cursor:pointer;margin:0}
+.row .main{min-width:0}
+.row .title{font-weight:600;font-size:16px}
+.row .school{color:var(--muted);font-size:14px}
+.row .tags{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:4px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;align-items:center}
+.row .note{font-size:14px;margin-top:6px;max-width:70ch}
+.row .go{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-fg);padding:8px 14px;border-radius:6px;font-weight:600;font-size:14px;text-decoration:none;text-align:center;white-space:nowrap}
+.btn.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.row.done .main{opacity:.55}
+.row.done .title{text-decoration:line-through;text-decoration-thickness:1.5px}
+.pill{font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.info{background:var(--gold-soft);color:var(--gold)}
+.contact{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;user-select:all}
+@media (max-width:620px){
+  .row{grid-template-columns:auto 1fr}
+  .row .go{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap}
+}
+a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.lead{background:var(--gold-soft);border-left:4px solid var(--gold);padding:12px 16px;margin:22px 0 0;border-radius:0 6px 6px 0;font-size:15px}
+.lead p{margin:0 0 6px}.lead p:last-child{margin:0}
+
+.steps{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:10px;counter-reset:s}
+.steps li{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px 12px 54px;position:relative;min-width:0;display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14px;display:grid;place-items:center;font-family:var(--display)}
+.steps li b{display:block;margin-bottom:2px}
+.steps li p{font-size:14.5px;margin:0;color:var(--muted)}
+.steps li input{width:22px;height:22px;accent-color:var(--accent);cursor:pointer;margin:0}
+.steps li.done b{text-decoration:line-through;opacity:.6}
+
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+.tbl{overflow-x:auto}
+.docs{columns:2;column-gap:28px;padding-left:20px;margin:12px 0 0;font-size:15px}
+.docs li{break-inside:avoid;margin-bottom:6px}
+@media (max-width:560px){.docs{columns:1}}
+.muted{font-size:14px;color:var(--muted)}
+footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.row .main,.steps li b{transition:opacity .2s}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Elementary teaching, Cheyenne, Wyoming</div>
+  <h1>Cheyenne Teaching Jobs</h1>
+  <p class="sub">Every certified elementary opening in Laramie County, pulled live from the district hiring systems. Check the box when you have applied. Checkmarks save on this device.</p>
+  <span class="stamp">Checked Monday, November 17, 2026</span>
+</header>
+
+<div class="bar">
+  <div class="count"><span id="n-done">0</span> of <span id="n-total">0</span><small>applied</small></div>
+  <div class="hint">Blue button opens the posting. Apply there, then come back and tick the box.</div>
+</div>
+
+<h3>Apply this week</h3>
+<ul class="list" id="jobs-main">
+
+<li class="row" data-id="poder4">
+  <input type="checkbox" id="chk-poder4" aria-label="Applied: PODER 4th Grade Teacher">
+  <div class="main">
+    <div class="title">4th Grade Teacher</div>
+    <div class="school">PODER Academy Elementary (public charter inside LCSD1), Cheyenne</div>
+    <div class="tags"><span class="pill good">Best fit, general ed</span><span>Posted Oct 15, 2026</span><span>Open until filled</span></div>
+    <div class="note">The only general-ed K-6 classroom opening in the county right now. Needs a Wyoming K-6 endorsement (or in process). Longer day: 7:40 to 4:00, until 5:00 Mon and Tue. Benefits for dependents, Wyoming Retirement System match, WY-TOPP bonuses. Salary not posted; ask.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://laramie1.schoolspring.com/?jobid=5961575">Apply on SchoolSpring</a></div>
+</li>
+
+<li class="row" data-id="stmarys">
+  <input type="checkbox" id="chk-stmarys" aria-label="Applied: St. Mary's Elementary Teacher">
+  <div class="main">
+    <div class="title">Full-time Elementary Teacher, 2026-27</div>
+    <div class="school">St. Mary's Catholic School, 2200 O'Neil Ave, Cheyenne (PK3 to 6th)</div>
+    <div class="tags"><span class="pill good">Email a resume, no portal</span><span>Standing listing</span></div>
+    <div class="note">Private Catholic elementary actively asking for full-time teachers. Wants a Wyoming certificate or someone qualified to get one. Email resume and references to Kathleen Higgins: <span class="contact">higgins@stmaryswyo.org</span> or <span class="contact">307-638-9268</span>. Salary not posted; private usually runs under district scale.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://stmaryswyo.org/index.php/employment/">Open listing</a></div>
+</li>
+
+<li class="row" data-id="subpool">
+  <input type="checkbox" id="chk-subpool" aria-label="Applied: LCSD1 Substitute Pool">
+  <div class="main">
+    <div class="title">Substitute Teacher Applicant Pool</div>
+    <div class="school">Laramie County School District 1, all Cheyenne schools</div>
+    <div class="tags"><span class="pill info">Foot in the door</span><span>Open continuously</span></div>
+    <div class="note">Fastest way to be known in the buildings before spring postings open. Needs a Wyoming substitute permit or full license from PTSB. Attach resume, transcript, and the permit or it will not be considered.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://laramie1.schoolspring.com/?jobid=5868375">Apply on SchoolSpring</a><a class="btn alt" href="https://www.laramie1.org/substitute-teacher-information">Sub info</a></div>
+</li>
+
+<li class="row" data-id="classical">
+  <input type="checkbox" id="chk-classical" aria-label="Contacted: Cheyenne Classical Academy">
+  <div class="main">
+    <div class="title">Intro email to Cheyenne Classical Academy</div>
+    <div class="school">Public charter, 5200 Ridge Rd, Cheyenne. K-8 next year and adding a grade every year.</div>
+    <div class="tags"><span class="pill info">No posting yet, they hire every spring</span><span>Also taking sub applications</span></div>
+    <div class="note">Nothing posted today, but a school that adds a grade each year hires new classroom teachers every spring. A short intro email now puts you on the list. Phone <span class="contact">(307) 778-8222</span>.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://www.cheyenneclassical.org/careers">Careers page</a></div>
+</li>
+
+</ul>
+
+<h3>Only if you are fluent in Spanish</h3>
+<p class="muted">Regular 4th grade classrooms, but the district requires fluent Spanish. 185-day contracts, $61,575 to $94,083 base plus benefits.</p>
+<ul class="list" id="jobs-endorse">
+
+<li class="row" data-id="dli-hobbs">
+  <input type="checkbox" id="chk-dli-hobbs" aria-label="Applied: Hobbs 4th Grade DLI Spanish">
+  <div class="main">
+    <div class="title">4th Grade Spanish Dual Language Immersion, 2027-28</div>
+    <div class="school">Hobbs Elementary, Cheyenne. Starts Aug 16, 2027.</div>
+    <div class="tags"><span class="pill warn">Fluent Spanish</span><span>Posted Oct 14, 2026</span></div>
+    <div class="note">Posted a full year early, which means the district struggles to fill it. Easiest contract in the county if you have Spanish.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://laramie1.schoolspring.com/?jobid=5960226">Apply on SchoolSpring</a></div>
+</li>
+
+<li class="row" data-id="dli-affl">
+  <input type="checkbox" id="chk-dli-affl" aria-label="Applied: Afflerbach 4th Grade DLI Spanish">
+  <div class="main">
+    <div class="title">4th Grade Spanish Dual Language Immersion, 2027-28</div>
+    <div class="school">Afflerbach Elementary, Cheyenne. Starts Aug 16, 2027.</div>
+    <div class="tags"><span class="pill warn">Fluent Spanish</span><span>Posted Oct 14, 2026</span></div>
+  </div>
+  <div class="go"><a class="btn" href="https://laramie1.schoolspring.com/?jobid=5960232">Apply on SchoolSpring</a></div>
+</li>
+
+</ul>
+
+<h3>Set up once</h3>
+<ul class="list" id="jobs-setup">
+
+<li class="row" data-id="ssalert">
+  <input type="checkbox" id="chk-ssalert" aria-label="Done: SchoolSpring account and alert">
+  <div class="main">
+    <div class="title">Make a SchoolSpring account and turn on a job alert</div>
+    <div class="school">LCSD1 board, 94 postings today. Alert on "Classroom Teacher, Elementary" so the spring wave emails you.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://laramie1.schoolspring.com/">LCSD1 board</a></div>
+</li>
+
+<li class="row" data-id="lcsd2">
+  <input type="checkbox" id="chk-lcsd2" aria-label="Done: LCSD2 board checked">
+  <div class="main">
+    <div class="title">Bookmark the Laramie County District 2 board</div>
+    <div class="school">Pine Bluffs, Burns, Albin, Carpenter. 30 to 45 minutes east. No teaching jobs posted today; sub list is open. Phone <span class="contact">(307) 245-4050</span>.</div>
+  </div>
+  <div class="go"><a class="btn" href="https://laramie2.schoolspring.com/">LCSD2 board</a></div>
+</li>
+
+</ul>
+
+<div class="lead">
+  <p><strong>Why the list is short in November.</strong> Mid-year is the quiet part of the school hiring calendar. What is open now is mostly mid-year fill-ins. The big wave of general-ed elementary contracts for 2027-28 posts from about February through April.</p>
+  <p><strong>So:</strong> apply to the top of the list this week, get the Wyoming license moving today because it takes four to six weeks, sub in January so principals know your face, and be first in line in the spring.</p>
+</div>
+
+<h2>Wyoming license checklist</h2>
+<p>Every job above needs a Wyoming certificate from the Professional Teaching Standards Board (PTSB), in hand or in process. A Colorado license does not transfer automatically, but for a traditionally trained teacher with a Colorado license and passed Praxis the review is routine. Time is the issue, not approval.</p>
+<ol class="steps" id="license">
+  <li data-id="l1"><div><b>Create a PTSB portal account, start an out-of-state application</b><p>You are out-of-state unless your degree is from the University of Wyoming. <a href="https://ruby-innovation-9169.my.site.com/s/login/">PTSB portal</a>. Rules on the <a href="https://wyomingptsb.com/licensure/out-of-state-applicants/">out-of-state page</a>.</p></div><input type="checkbox" id="chk-l1" aria-label="Done: PTSB application started"></li>
+  <li data-id="l2"><div><b>Order official transcripts sent directly to PTSB</b><p>From your degree-granting school. They must come from the institution.</p></div><input type="checkbox" id="chk-l2" aria-label="Done: transcripts ordered"></li>
+  <li data-id="l3"><div><b>Get two blue FBI fingerprint cards rolled</b><p>Cheyenne PD or the Laramie County Sheriff will do it. About $50 processing.</p></div><input type="checkbox" id="chk-l3" aria-label="Done: fingerprints"></li>
+  <li data-id="l4"><div><b>Upload your Colorado license and Praxis or PLACE scores</b><p>Wyoming accepts the tests you took for Colorado. No Wyoming Praxis needed.</p></div><input type="checkbox" id="chk-l4" aria-label="Done: license and scores uploaded"></li>
+  <li data-id="l5"><div><b>Clear the U.S. and Wyoming Constitution requirement</b><p>Short exam PTSB points you to, or coursework on your transcript. Ask PTSB which applies.</p></div><input type="checkbox" id="chk-l5" aria-label="Done: constitution requirement"></li>
+  <li data-id="l6"><div><b>Pay the invoice and wait</b><p>Published out-of-state fee is $225 for a five-year license. PTSB emails the invoice after review. Four to six weeks once complete. In by Thanksgiving means licensed by early January.</p></div><input type="checkbox" id="chk-l6" aria-label="Done: fee paid"></li>
+</ol>
+<p class="muted" style="margin-top:12px">PTSB is in Cheyenne: 2001 Capitol Ave, Emerson Building Room 128, <span class="contact">307-777-7291</span>. If the full license drags, a <a href="https://wyomingptsb.com/licensure/substitute-teaching/">substitute permit</a> is faster and gets you working.</p>
+
+<h2>Have these ready as PDFs</h2>
+<p class="muted">SchoolSpring will not submit until every required item is attached. Each file a PDF under 10 MB with a one-word filename.</p>
+<ul class="docs">
+  <li>Resume with the Windsor school and grade levels</li>
+  <li>Copy of Colorado teaching license</li>
+  <li>Unofficial transcripts (official ones go to PTSB separately)</li>
+  <li>Praxis or PLACE score reports</li>
+  <li>Three professional references with phone and email</li>
+  <li>Two or three recommendation letters, a principal's carries the most weight</li>
+  <li>Cover letter you can tailor per school</li>
+  <li>Most recent evaluation, if you are comfortable sharing it</li>
+  <li>Screenshot of the PTSB portal showing the application in progress</li>
+</ul>
+
+<h2>Spring plan</h2>
+<div class="tbl"><table>
+<thead><tr><th>When</th><th>Do</th></tr></thead>
+<tbody>
+<tr><td><b>This week</b></td><td>Apply to PODER and St. Mary's. Open the PTSB application. Order transcripts. SchoolSpring account and alert.</td></tr>
+<tr><td><b>By mid-December</b></td><td>Fingerprints done, PTSB application complete. Intro email to Cheyenne Classical. Sub pool application the day the permit or license number exists.</td></tr>
+<tr><td><b>January</b></td><td>License lands. Sub a few days a week in LCSD1 elementaries, especially schools you would want. Tell every principal you are looking for 2027-28.</td></tr>
+<tr><td><b>February to April</b></td><td>The real wave. Most 2027-28 elementary contracts post in this window. Apply the day each posts. Check LCSD2 and Cheyenne Classical weekly.</td></tr>
+<tr><td><b>Pay check</b></td><td>LCSD1 base is $61,575 to $94,083 on a 185-day contract, Wyoming Retirement System, and no state income tax in Wyoming. Run the Colorado number against that before weighing a private-school offer.</td></tr>
+</tbody></table></div>
+
+<footer>Sources: LCSD1 and LCSD2 SchoolSpring job boards (live data, Nov 17, 2026), laramie1.org, stmaryswyo.org, cheyenneclassical.org, wyomingptsb.com licensure pages and the Wyoming PTSB fee schedule (Chapter 2, Section 10). Verify fees and deadlines with PTSB; they change. Postings marked until filled can close any day.</footer>
+</div>
+
+<script>
+(function(){
+  var KEY="cheyenne-jobs-applied-v2", state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){state={}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  var jobRows=[].slice.call(document.querySelectorAll(".list .row"));
+  var licRows=[].slice.call(document.querySelectorAll("#license li"));
+  var nDone=document.getElementById("n-done"), nTotal=document.getElementById("n-total");
+  function count(){
+    var d=jobRows.filter(function(r){return r.classList.contains("done")}).length;
+    nDone.textContent=d; nTotal.textContent=jobRows.length;
+  }
+  jobRows.concat(licRows).forEach(function(row){
+    var id=row.getAttribute("data-id"), box=row.querySelector("input[type=checkbox]");
+    if(!box) return;
+    if(state[id]){box.checked=true;row.classList.add("done")}
+    box.addEventListener("change",function(){
+      row.classList.toggle("done",box.checked); state[id]=box.checked; save(); count();
+    });
+  });
+  count();
+})();
+</script>
+
+</body>
+</html>
